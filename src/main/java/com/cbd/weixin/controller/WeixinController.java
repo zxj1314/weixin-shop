@@ -83,21 +83,7 @@ public class WeixinController {
 		newEntity.setCreateTime(new Date().getTime()+"");
 		//=================================
 
-		if(entity.getEventKey()!=null && entity.getEventKey().equals("TODAY_TUIJIAN")){
-			 System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-            ArrayList<ArticleResponse> objects = new ArrayList<>();
-            ArticleResponse articleResponse = new ArticleResponse();
-            articleResponse.setDescription("砸金蛋活动免费参与");
-            articleResponse.setPicUrl("http://mmbiz.qpic.cn/mmbiz_jpg/d3mQBd5SRNib3KHlyB9OwicjLhkTgKCbGrj6EyrIuFibibgDtblHYEiajKtlHkTZESsJ1BfPJhcHzKUoX3TYqCKy3eQ/0?wx_fmt=jpeg");
-            articleResponse.setTitle("露波的最爱");
-            articleResponse.setUrl("http://crhpen.natappfree.cc/egg2.jsp");
-            objects.add(articleResponse);
-            newEntity.setArticle(objects);
-            newEntity.setArticleCount(objects.size()+"");
-            newEntity.setMsgType("news");
-            System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-            return newEntity;
-		}
+
 		//=================================
 		//关注事件(点击关注事件相关的业务/取消关注相关的业务)
 		if ("event".equals(entity.getMsgType())) {
@@ -162,6 +148,22 @@ public class WeixinController {
             newEntity.setArticleCount(objects.size()+"");
             newEntity.setMsgType("news");
         }
+
+		if(entity.getMsgType()!=null && entity.getContent().equals("推荐")){
+			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			ArrayList<ArticleResponse> objects = new ArrayList<>();
+			ArticleResponse articleResponse = new ArticleResponse();
+			articleResponse.setDescription("砸金蛋活动免费参与");
+			articleResponse.setPicUrl("http://mmbiz.qpic.cn/mmbiz_jpg/d3mQBd5SRNib3KHlyB9OwicjLhkTgKCbGrj6EyrIuFibibgDtblHYEiajKtlHkTZESsJ1BfPJhcHzKUoX3TYqCKy3eQ/0?wx_fmt=jpeg");
+			articleResponse.setTitle("露波的最爱");
+			articleResponse.setUrl("http://crhpen.natappfree.cc/egg2.jsp");
+			objects.add(articleResponse);
+			newEntity.setArticle(objects);
+			newEntity.setArticleCount(objects.size()+"");
+			newEntity.setMsgType("news");
+			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			return newEntity;
+		}
 
 		//发送类型
 		return newEntity;

@@ -18,7 +18,7 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
  * @Date 2018-03-19
  */
 @Slf4j
-@SpringBootApplication(exclude={DataSourceAutoConfiguration.class})
+@SpringBootApplication
 public class WxShopApplication extends SpringBootServletInitializer {
   public static void main(String[] args) {
     SpringApplication.run(WxShopApplication.class, args);

@@ -8,9 +8,9 @@ import java.util.Date;
 public class WeixinUtil {
     public static final String TOKEN = "zhuxiaojin";
 
-    public static final String APPID = "wx0aef7875e1cc0332";
+    public static final String APPID = "wx087e01ed72cce752";
 
-    public static final String APPSECRET = "1354b29d86100de9ff998f5b54a16ce5";
+    public static final String APPSECRET = "d37eaca7e830407b2c4706d88ad0da18";
 
     //获取用户信息的url
     public static final String USERINFO_URL = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN";
