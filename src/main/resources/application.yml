@@ -1,0 +1,38 @@
+server:
+  port: 8092
+
+
+spring:
+  application:
+    index: 0
+    name: cbd-java
+
+  datasource:
+    name: cbd-java-DBCP
+    url: jdbc:mysql://127.0.0.1:3306/rcp_dev?characterEncoding=UTF-8&useUnicode=true&useSSL=false
+    username: root
+    password: 123456
+    driverClassName : com.mysql.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      connectionTimeout: 50000
+      idleTimeout: 600000
+      maxLifetime: 3600000
+      validationTimeout: 5000
+      leakDetectionThreshold: 20000
+      maximumPoolSize: 20
+      minimumIdle: 20
+
+mybatis:
+  config-location: classpath:mybatis-config.xml
+  mapper-locations: com/cbd/weixin/mapper/*.xml
+  type-aliases-package: com/cbd/weixin/domain
+
+wechat:
+  pay:
+    appId:
+    mchId:
+    mchKey:
+    subAppId:
+    subMchId:
+    keyPath:

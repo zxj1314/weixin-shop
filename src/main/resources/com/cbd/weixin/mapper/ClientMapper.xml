@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" > 
+<mapper namespace="com.cbd.weixin.mapper.ClientMapper" >
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.cbd.weixin.domain.Client">
+        INSERT INTO client(openID,concernTime,cancelTime,status,nickname) VALUES(#{openID},#{concernTime},#{cancelTime},#{status},#{nickname})
+    </insert>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM client WHERE id=#{id}
+    </delete>
+
+    <update id="update" parameterType="com.cbd.weixin.domain.Client">
+        UPDATE client
+        SET
+         status=#{status},
+         concernTime=#{concernTime},
+         cancelTime=#{cancelTime}
+         WHERE id=#{id}
+    </update>
+    <!--查询取消关注的客户的(再次关注的客户)id-->
+    <select id="getClientId" resultType="Long" parameterType="String">
+        SELECT id FROM  client WHERE openID=#{openID}
+    </select>
+    <select id="listAll" resultType="com.cbd.weixin.domain.Client">
+    	select * from client
+    </select>
+</mapper>
