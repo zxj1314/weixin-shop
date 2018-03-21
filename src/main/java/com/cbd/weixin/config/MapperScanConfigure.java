@@ -10,4 +10,5 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @MapperScan("com.cbd.weixin.mapper")
 public class MapperScanConfigure {
+
 }
