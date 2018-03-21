@@ -2,9 +2,11 @@ package com.cbd.weixin.controller;
 
 import com.cbd.weixin.domain.ArticleResponse;
 import com.cbd.weixin.domain.Client;
+import com.cbd.weixin.domain.TextMessage;
 import com.cbd.weixin.domain.XmlMessageEntity;
 import com.cbd.weixin.service.IClientService;
 import com.cbd.weixin.utils.HttpUtil;
+import com.cbd.weixin.utils.MessageUtil;
 import com.cbd.weixin.utils.SecurityUtil;
 import com.cbd.weixin.utils.WeixinUtil;
 import com.alibaba.fastjson.JSON;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -70,8 +74,8 @@ public class WeixinController {
 	//post消息处理
 	@RequestMapping(value = "/weixin", method = RequestMethod.POST)
 	@ResponseBody
-	public XmlMessageEntity handlerMessage(@RequestBody XmlMessageEntity entity) throws Exception{
-		System.out.println(entity.getEventKey());
+	public String handlerMessage(@RequestBody XmlMessageEntity entity) throws Exception{
+		System.out.println(entity.getMsgType()+entity.getContent());
 		//要发送的对象
 		XmlMessageEntity newEntity = new XmlMessageEntity();
 
@@ -83,8 +87,9 @@ public class WeixinController {
 		newEntity.setCreateTime(new Date().getTime()+"");
 		//=================================
 
+		//要发送的对象
+		TextMessage text=null;
 
-		//=================================
 		//关注事件(点击关注事件相关的业务/取消关注相关的业务)
 		if ("event".equals(entity.getMsgType())) {
 			//如果是关注事件
@@ -132,41 +137,38 @@ public class WeixinController {
 				clientService.update(client);
 			}
 				newEntity.setMsgType("text");
-				return newEntity;
+				return " ";
 		}
 
-		//自动回复
-		if(entity.getContent().equals("金蛋")){
-            ArrayList<ArticleResponse> objects = new ArrayList<>();
-            ArticleResponse articleResponse = new ArticleResponse();
-            articleResponse.setDescription("e");
-            articleResponse.setPicUrl("http://mmbiz.qpic.cn/mmbiz_png/d3mQBd5SRNib3KHlyB9OwicjLhkTgKCbGrG4p1GXOFFPBia8PnicJdrmHSrLibQBrUBHphrO3ZLGChfdQKYV1FzGa6w/0?wx_fmt=png");
-            articleResponse.setTitle("砸金蛋");
-            articleResponse.setUrl("http://crhpen.natappfree.cc/egg2.jsp");
-            objects.add(articleResponse);
-            newEntity.setArticle(objects);
-            newEntity.setArticleCount(objects.size()+"");
-            newEntity.setMsgType("news");
-        }
 
-		if(entity.getMsgType()!=null && entity.getContent().equals("推荐")){
-			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-			ArrayList<ArticleResponse> objects = new ArrayList<>();
-			ArticleResponse articleResponse = new ArticleResponse();
-			articleResponse.setDescription("砸金蛋活动免费参与");
-			articleResponse.setPicUrl("http://mmbiz.qpic.cn/mmbiz_jpg/d3mQBd5SRNib3KHlyB9OwicjLhkTgKCbGrj6EyrIuFibibgDtblHYEiajKtlHkTZESsJ1BfPJhcHzKUoX3TYqCKy3eQ/0?wx_fmt=jpeg");
-			articleResponse.setTitle("露波的最爱");
-			articleResponse.setUrl("http://crhpen.natappfree.cc/egg2.jsp");
-			objects.add(articleResponse);
-			newEntity.setArticle(objects);
-			newEntity.setArticleCount(objects.size()+"");
-			newEntity.setMsgType("news");
-			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-			return newEntity;
+		if(entity.getMsgType()!=null && "推荐".equals(entity.getContent())){
+			/*text=new TextMessage();
+			text.setContent("澳门首家皇家线上赌场开业啦！");
+			text.setToUserName(entity.getToUserName());
+			text.setFromUserName(entity.getFromUserName());
+			text.setCreateTime(new Date().getTime());
+			text.setMsgType("text");
+            String respMessage = MessageUtil.textMessageToXml(text);*/
+            //System.out.println("=============accessToken:"+WeixinUtil.getAccessToken());
+            newEntity.setMsgType("text");
+            newEntity.setContent("上传成功");
+			return newEntity.toString();
 		}
 
 		//发送类型
-		return newEntity;
+		return " ";
+	}
 
+	//用于测试被动回复消息
+	@ResponseBody()
+	@RequestMapping(value = "/123" ,method = RequestMethod.POST,produces = "application/xml; charset=utf-8")
+	public String Reply2(HttpServletRequest request) throws IOException {
+		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+				"<note>\n" +
+				"    <FromUserName>Tove</FromUserName>\n" +
+				"    <ToUserName>Jani</ToUserName>>\n" +
+				"    <MsgType>Reminder</MsgType>\n" +
+				"    <Content>Don't forget me this weekend!</Content>\n" +
+				"</note>";
 	}
 }
