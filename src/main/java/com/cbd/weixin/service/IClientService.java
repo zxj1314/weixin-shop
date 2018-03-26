@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * Created by zlb on 2017.09.05.
+ * 微信用户服务
  */
 public interface IClientService {
     void insert(Client client);

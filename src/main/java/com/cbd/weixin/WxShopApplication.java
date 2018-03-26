@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 
 /**
@@ -18,6 +19,7 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
  * @Date 2018-03-19
  */
 @Slf4j
+@EnableScheduling
 @SpringBootApplication
 public class WxShopApplication extends SpringBootServletInitializer {
   public static void main(String[] args) {

@@ -29,10 +29,19 @@ mybatis:
   type-aliases-package: com/cbd/weixin/domain
 
 wechat:
-  pay:
-    appId:
-    mchId:
-    mchKey:
-    subAppId:
-    subMchId:
-    keyPath:
+  token: zhuxiaojin
+  appid: wx087e01ed72cce752
+  appsecret : d37eaca7e830407b2c4706d88ad0da18
+  userinfoUrl : https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN
+  web_accesstoken_url : https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET
+  upload_url : https://api.weixin.qq.com/cgi-bin/material/add_news?access_token=ACCESS_TOKEN
+  uploadmedia_url : https://api.weixin.qq.com/cgi-bin/material/add_material?access_token=ACCESS_TOKEN&type=TYPE
+  sendmsg_url : https://api.weixin.qq.com/cgi-bin/message/mass/sendall?access_token=ACCESS_TOKEN
+
+wechatpay:
+  appId:
+  mchId:
+  mchKey:
+  subAppId:
+  subMchId:
+  keyPath:

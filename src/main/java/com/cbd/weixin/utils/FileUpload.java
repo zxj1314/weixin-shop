@@ -1,6 +1,9 @@
 package com.cbd.weixin.utils;
 
 import com.alibaba.fastjson.JSONObject;
+import com.cbd.weixin.config.weixin.WeixinConfigure;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -11,24 +14,21 @@ import java.security.NoSuchProviderException;
 
 /**
  * @ClassName
- * @Description 上传素材
+ * @Description 上传素材,需要公众号认证后才能上传永久素材，才能获取到有效的media_id
  * @author zhuxiaojin
  * @Date 2018-03-21
  */
+@Component
 public class FileUpload {
-
-    public final static String UPLOAD_URL = "https://api.weixin.qq.com/cgi-bin/material/add_news?access_token=ACCESS_TOKEN";
-
-    public final static String SENDMSG_URL = "https://api.weixin.qq.com/cgi-bin/message/mass/sendall?access_token=ACCESS_TOKEN";
-
-    public final static String CLEAR_URL = "https://api.weixin.qq.com/cgi-bin/clear_quota?access_token=ACCESS_TOKEN";
+    @Autowired
+    private  WeixinConfigure config;
 
     //上传永久素材
-    public static JSONObject addMaterialEver(String fileurl, String type, String token) {
+    public  JSONObject addMaterialEver(String fileurl, String type, String token) {
         try {
             File file = new File(fileurl);
-            //上传素材
-            String path = "https://api.weixin.qq.com/cgi-bin/material/add_material?access_token=" + token + "&type=" + type;
+            //上传素材路径
+            String path = config.getUploadmedia_url().replaceAll("ACCESS_TOKEN",token).replaceAll("TYPE",type);
 
 
             String result = connectHttpsByPost(path, null, file);
@@ -58,7 +58,7 @@ public class FileUpload {
     }
 
     //上传永久素材
-    public static String connectHttpsByPost(String path, String KK, File file) throws IOException, NoSuchAlgorithmException, NoSuchProviderException, KeyManagementException {
+    public  String connectHttpsByPost(String path, String KK, File file) throws IOException, NoSuchAlgorithmException, NoSuchProviderException, KeyManagementException {
         URL urlObj = new URL(path);
         //连接
         HttpURLConnection con = (HttpURLConnection) urlObj.openConnection();
@@ -134,12 +134,12 @@ public class FileUpload {
 
 
    //上传永久图文素材
-    public static String upload(){
-        String result = HttpUtil.post(UPLOAD_URL.replace("ACCESS_TOKEN", WeixinUtil.getAccessToken()), "{\n" +
+    public  String uploadNews(){
+        String result = HttpUtil.post(config.getUpload_url().replace("ACCESS_TOKEN", config.getWeb_accesstoken_url()), "{\n" +
                 "\n" +
                 "        \"articles\": [{\n" +
                 "\n" +
-                "        \"title\":'砸金蛋',\n" +
+                "        \"title\":'有人闯进来了',\n" +
                 "\n" +
                 "        \"thumb_media_id\":'5ac04inGBP9qXAdV-1jJGuh0ovOLKE3qRDgsXl90ZQA',\n" +
                 "\n" +
@@ -149,7 +149,7 @@ public class FileUpload {
                 "\n" +
                 "        \"show_cover_pic\":'1',\n" +
                 "\n" +
-                "        \"content\":'砸金蛋',\n" +
+                "        \"content\":'有人闯进来了',\n" +
                 "\n" +
                 "        \"content_source_url\":'http://zxj.nat300.top/egg2.jsp'\n" +
                 "\n" +
@@ -162,8 +162,8 @@ public class FileUpload {
     }
 
     //群发
-    public static void sendMsg(){
-        String msg = HttpUtil.post(SENDMSG_URL.replace("ACCESS_TOKEN", WeixinUtil.getAccessToken()), "{\n" +
+    public  void sendMsg(){
+        String msg = HttpUtil.post(config.getSendmsg_url().replace("ACCESS_TOKEN",  config.getWeb_accesstoken_url()), "{\n" +
                 "   \"filter\":{\n" +
                 "      \"is_to_all\":true\n" +
                 "   },\n" +
@@ -176,25 +176,6 @@ public class FileUpload {
         System.out.println(msg);
     }
 
-    //清零
-    public static void clear(){
-        String clear=HttpUtil.post(CLEAR_URL.replace("ACCESS_TOKEN",WeixinUtil.getAccessToken()),"{\n" +
-                "“appid”:“wx0aef7875e1cc0332”\n" +
-                "}");
-        System.out.println(clear);
-    }
-
-    public static void main(String[] args) {
-       try {
-            String token = WeixinUtil.getAccessToken();
-            String path = "D:/curl/qhc.mp3";
-            JSONObject object = addMaterialEver(path,"voice",token);
-            System.out.println(object.toString());
-        } catch (Exception e) {
-           e.printStackTrace();
-        }
-
-    }
 }
 
 

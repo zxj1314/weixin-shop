@@ -1,17 +1,14 @@
 package com.cbd.weixin.controller;
 
-import com.cbd.weixin.domain.ArticleResponse;
+import com.cbd.weixin.config.weixin.WeixinConfigure;
 import com.cbd.weixin.domain.Client;
 import com.cbd.weixin.domain.TextMessage;
 import com.cbd.weixin.domain.XmlMessageEntity;
 import com.cbd.weixin.service.IClientService;
 import com.cbd.weixin.utils.HttpUtil;
-import com.cbd.weixin.utils.MessageUtil;
 import com.cbd.weixin.utils.SecurityUtil;
-import com.cbd.weixin.utils.WeixinUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -35,6 +31,8 @@ import java.util.Date;
 public class WeixinController {
 	@Autowired
 	private IClientService clientService;
+	@Autowired
+	private WeixinConfigure config;
 
 	//get验证
 	@RequestMapping(value = "/weixin", method = RequestMethod.GET)
@@ -50,7 +48,7 @@ public class WeixinController {
 		System.out.println(echostr);
 
 		//加密/校验流程如下：
-		String[] arr = { WeixinUtil.TOKEN, timestamp, nonce };
+		String[] arr = { config.getToken(), timestamp, nonce };
 
 		//1）将token、timestamp、nonce三个参数进行字典序排序
 		Arrays.sort(arr);
@@ -95,8 +93,8 @@ public class WeixinController {
 			//如果是关注事件
 			if ("subscribe".equals(entity.getEvent())) {
 				//获取用户信息
-				String result = HttpUtil.get(WeixinUtil.USERINFO_URL.replace("ACCESS_TOKEN",
-						WeixinUtil.getAccessToken()).replace("OPENID", entity.getFromUserName()));
+				String result = HttpUtil.get(config.getUserinfoUrl().replace("ACCESS_TOKEN",
+						config.getWeb_accesstoken_url()).replace("OPENID", entity.getFromUserName()));
 				//转成json对象
 				JSONObject json = JSON.parseObject(result);
 				String openid = json.getString("openid");
@@ -159,16 +157,10 @@ public class WeixinController {
 		return " ";
 	}
 
-	//用于测试被动回复消息
+	//用于测试
 	@ResponseBody()
-	@RequestMapping(value = "/123" ,method = RequestMethod.POST,produces = "application/xml; charset=utf-8")
+	@RequestMapping(value = "/123" ,method = RequestMethod.POST)
 	public String Reply2(HttpServletRequest request) throws IOException {
-		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-				"<note>\n" +
-				"    <FromUserName>Tove</FromUserName>\n" +
-				"    <ToUserName>Jani</ToUserName>>\n" +
-				"    <MsgType>Reminder</MsgType>\n" +
-				"    <Content>Don't forget me this weekend!</Content>\n" +
-				"</note>";
+		return config.getToken();
 	}
 }
